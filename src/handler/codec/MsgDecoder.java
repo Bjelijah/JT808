@@ -2,6 +2,7 @@ package handler.codec;
 
 
 
+import bean.MsgBody;
 import bean.MsgHeader;
 import bean.PackageData;
 import protocol.TPMSConsts;
@@ -45,16 +46,19 @@ public class MsgDecoder {
 		byte[] tmp = new byte[msgHeader.getMsgBodyLength()];
 		System.arraycopy(data, msgBodyByteStartIndex, tmp, 0, tmp.length);
 
-		
+		parseMsgBody0704FromBytes(tmp);
+
+		MsgBody body = new MsgBody(msgHeader.getMsgId(), tmp);
+
 		ret.setMsgBodyBytes(tmp);
 
 		// 3. 去掉分隔符之后，最后一位就是校验码
 		// int checkSumInPkg =
 		// this.bitOperator.oneByteToInteger(data[data.length - 1]);
 		int checkSumInPkg = data[data.length - 1];
-		for (int i=data.length-1;i>data.length-10;i--){
-			System.out.println("后10   "+String.format("0x%x",data[i]));
-		}
+//		for (int i=data.length-1;i>data.length-10;i--){
+//			System.out.println("后10   "+String.format("0x%x",data[i]));
+//		}
 
 		int calculatedCheckSum = this.bitOperator.getCheckSum4JT808(data, 0, data.length - 1);
 //		ret.setCheckSum(checkSumInPkg);
@@ -65,6 +69,33 @@ public class MsgDecoder {
 		}
 		return ret;
 	}
+
+	private void parseMsgBody0704FromBytes(byte [] data){
+		int dataNum = this.parseIntFromBytes(data,0,2);//0 1
+		System.out.println("dataNum="+dataNum);
+		byte dataType = data[2]; //2
+		System.out.println("dataType="+dataType);
+		int reportDataLen = parseIntFromBytes(data,3,2);// 3 4
+		System.out.println("reportDataLen="+reportDataLen);
+		byte [] reportData = new byte[reportDataLen];
+		System.arraycopy(data,5,reportData,0,reportDataLen);
+		parse8_12(reportData);
+	}
+
+	private void parse8_12(byte [] data){
+		int ansId = parseIntFromBytes(data,0,2);// 0 1
+		System.out.println("ansId="+ansId);
+		byte ansParamNum = data[2];
+		System.out.println("ansNum="+ansParamNum);
+		byte ansParamSum = data[3];
+		System.out.println("ansParamSum="+ansParamSum);
+		int paramId = parseIntFromBytes(data,4,2);//4 5
+		System.out.println("paramId="+paramId);
+		byte paramLen = data[6];
+		System.out.println("paramLen="+paramLen);
+	}
+
+
 
 	private MsgHeader parseMsgHeaderFromBytes(byte[] data) {
 		MsgHeader msgHeader = new MsgHeader();
