@@ -1,4 +1,5 @@
 import handler.codec.MsgDecoder;
+import handler.codec.MsgUnpacker;
 import util.HexStringUtils;
 import util.JT808ProtocolUtils;
 
@@ -46,6 +47,10 @@ public class Main {
         bs = protocolUtils.doEscape4Receive(bs, 0, bs.length);
         MsgDecoder decoder = new MsgDecoder();
         decoder.bytes2PackageData(bs);
+        System.err.println("-----------------");
+        MsgUnpacker msg = new MsgUnpacker(bs);
+
+
     }
 
 }

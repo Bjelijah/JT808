@@ -44,8 +44,8 @@ public class ParseUtil {
         }
     }
 
-    private String parseBcdStringFromBytes(byte[] data, int startIndex, int lenth) {
-        return this.parseBcdStringFromBytes(data, startIndex, lenth, null);
+    public static String parseBcdStringFromBytes(byte[] data, int startIndex, int lenth) {
+        return parseBcdStringFromBytes(data, startIndex, lenth, null);
     }
 
     private static String parseBcdStringFromBytes(byte[] data, int startIndex, int lenth, String defaultVal) {
