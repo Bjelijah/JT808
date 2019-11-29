@@ -70,7 +70,7 @@ public class JT808Head {
     @Override
     public String toString() {
         return "JT808Head{" +
-                "msgId=" + msgId +
+                "msgId=" + String.format("0x%x",msgId) +
                 ", msgBodyProps=" + getBodyProps() +
                 ", phone=" +  getPhoneString()+
                 ", flowId=" + flowId +

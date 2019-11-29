@@ -1,9 +1,8 @@
 package util;
 
-import protocol.TPMSConsts;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 
 public class ParseUtil {
 
@@ -36,7 +35,7 @@ public class ParseUtil {
         try {
             byte[] tmp = new byte[lenth];
             System.arraycopy(data, startIndex, tmp, 0, lenth);
-            return new String(tmp, TPMSConsts.string_charset);
+            return new String(tmp, Charset.forName("GBK"));
         } catch (Exception e) {
             System.err.println("解析字符串出错:{}"+e.getMessage());
             e.printStackTrace();

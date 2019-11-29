@@ -5,6 +5,7 @@ import struct.StructField;
 import util.ParseUtil;
 
 import javax.xml.ws.ServiceMode;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,14 +18,15 @@ public class Data0200 {
     @StructField(order = 3) int longitude;
     @StructField(order = 4) short height;
     @StructField(order = 5) short speed;
-
-    public void setDirection(byte direction) {
-        this.direction = direction;
-    }
-
-    @StructField(order = 6) byte direction;
+    @StructField(order = 6) short direction;
     @StructField(order = 7) byte [] time = new byte[6];
 
+
+
+
+    public void setDirection(short direction) {
+        this.direction = direction;
+    }
     public int getAlarmFlag() {
         return alarmFlag;
     }
@@ -97,25 +99,32 @@ public class Data0200 {
         this.time = time;
     }
 
-    public String getTimeString(){
+    public String getTimeString() throws ParseException {
         String timeStr = ParseUtil.parseBcdStringFromBytes(time,0,time.length);
-        long timeLong = Long.valueOf(timeStr);
-        System.out.println(timeStr);
-
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timeLong);
+//        long timeLong = Long.valueOf(timeStr);
+//        System.out.println(timeStr);
+        Date date = new SimpleDateFormat("yyMMddHHmmss").parse(timeStr);
+       return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date);
+//        return date.toString();
     }
 
     @Override
     public String toString() {
-        return "Data0200{" +
-                "alarmFlag=" + alarmFlag +
-                ", status=" + status +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", height=" + height +
-                ", speed=" + speed +
-                ", direction=" + direction +
-                ", time=" +getTimeString()+
-                '}';
+        try {
+            return "Data0200{" +
+                    "alarmFlag=" + alarmFlag +
+                    ", status=" + status +
+                    ", latitude=" + latitude +
+                    ", longitude=" + longitude +
+                    ", height=" + height +
+                    ", speed=" + speed +
+                    ", direction=" + direction +
+                    ", time=" + getTimeString() +
+                    '}';
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return ";";
     }
+
 }
